@@ -6,3 +6,4 @@ abbr --add gl git pull
 abbr --add ga git add
 abbr --add gaa git add --all
 abbr --add gd git diff
+abbr --add lf lfcd

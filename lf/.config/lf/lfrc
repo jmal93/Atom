@@ -1,5 +1,7 @@
+set preview
 set previewer ~/.config/lf/previewer
 set cleaner ~/.config/lf/cleaner
+
 # interpreter for shell commands
 set shell bash
 set shellopts '-eu'
