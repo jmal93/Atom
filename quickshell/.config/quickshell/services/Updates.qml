@@ -8,6 +8,7 @@ Singleton {
     id: updates
     property string listOfUpdates: ""
     property string numberOfUpdates: ""
+    property bool isThereUpdates: Number(numberOfUpdates) == 0 ? false : true
 
     function updateSystem() {
         if (!doUpdateInTerminal.running) {

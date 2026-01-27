@@ -43,11 +43,21 @@ Item {
             }
         }
 
-        Text {
-            id: numberText
-            text: Updates.numberOfUpdates
-            color: Appearance.palette.foregroundColor
-            font.family: Appearance.font.family.main
+        Rectangle {
+            visible: Updates.isThereUpdates ? true : false
+
+            Text {
+                id: numberText
+                text: {
+                    if (Number(Updates.numberOfUpdates) == 0) {
+                        return "";
+                    }
+
+                    return Updates.numberOfUpdates;
+                }
+                color: Appearance.palette.foregroundColor
+                font.family: Appearance.font.family.main
+            }
         }
     }
 
@@ -97,13 +107,18 @@ Item {
                     }
 
                     anchors {
-                        right: parent.right
-                        verticalCenter: parent.verticalCenter
+                        centerIn: parent
                     }
 
                     Label {
                         id: listOfUpdatesText
-                        text: Updates.listOfUpdates
+                        text: {
+                            if (!Updates.isThereUpdates) {
+                                return "Tudo atualizado :)";
+                            }
+
+                            return Updates.listOfUpdates;
+                        }
                         color: Appearance.palette.foregroundColor
                         font.family: Appearance.font.family.main
                     }
@@ -116,6 +131,7 @@ Item {
                 implicitHeight: updateButtonText.implicitHeight
                 Layout.alignment: Qt.AlignCenter
                 color: "transparent"
+                visible: Updates.isThereUpdates ? true : false
 
                 Behavior on color {
                     ColorAnimation {
