@@ -44,7 +44,7 @@ Item {
                     anchors.fill: parent
                     hoverEnabled: true
                     onEntered: {
-                        background.color = Appearance.palette.gray;
+                        background.color = Appearance.palette.comment;
                     }
                     onExited: {
                         background.color = "transparent";

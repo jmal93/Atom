@@ -85,6 +85,8 @@ Scope {
                         verticalCenter: parent.verticalCenter
                     }
 
+                    UpdatesWidget {}
+
                     AudioWidget {}
 
                     BatteryIndicator {}

@@ -104,7 +104,7 @@ Item {
             networkNamePopup.visible = false;
         }
         onEntered: {
-            background.color = Appearance.palette.gray;
+            background.color = Appearance.palette.comment;
             networkNamePopup.visible = true;
         }
         onExited: {
