@@ -139,6 +139,10 @@ Item {
                     onExited: {
                         updateButton.color = "transparent";
                     }
+                    onClicked: {
+                        Updates.updateSystem();
+                        listOfUpdates.visible = false;
+                    }
                 }
             }
         }

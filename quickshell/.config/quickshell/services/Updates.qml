@@ -9,6 +9,12 @@ Singleton {
     property string listOfUpdates: ""
     property string numberOfUpdates: ""
 
+    function updateSystem() {
+        if (!doUpdateInTerminal.running) {
+            doUpdateInTerminal.running = true;
+        }
+    }
+
     Timer {
         interval: 1000 * 60 * 10
         repeat: true
@@ -28,5 +34,11 @@ Singleton {
                 updates.numberOfUpdates = txt.length ? String(txt.split("\n").length) : "0";
             }
         }
+    }
+
+    Process {
+        id: doUpdateInTerminal
+        running: false
+        command: ["kitty", "--hold", "sh", "-lc", "sudo pacman -Syu"]
     }
 }
