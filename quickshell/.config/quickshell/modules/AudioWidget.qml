@@ -43,18 +43,18 @@ Item {
         id: sliderPopup
         implicitWidth: sliderRow.width + 10
         implicitHeight: 30
-        color: Appearance.palette.backgroundColor1
 
         Rectangle {
             anchors.fill: parent
-            color: "transparent"
+            color: Appearance.palette.backgroundColor1
+            border.color: Appearance.palette.magenta
         }
 
         anchor {
             item: root
             rect.x: root.width / 2 - width / 2
             rect.y: root.height
-            margins.top: 10
+            margins.top: 16
         }
 
         RowLayout {
@@ -63,6 +63,7 @@ Item {
 
             Text {
                 color: Appearance.palette.foregroundColor
+                font.family: Appearance.font.family.main
                 text: qsTr(" 0 ")
             }
 
@@ -96,6 +97,7 @@ Item {
 
             Text {
                 color: Appearance.palette.foregroundColor
+                font.family: Appearance.font.family.main
                 text: qsTr("100")
             }
         }
