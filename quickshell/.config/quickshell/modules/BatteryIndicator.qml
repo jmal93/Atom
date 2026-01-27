@@ -88,12 +88,18 @@ Item {
         visible: false
         implicitWidth: batteryTimeText.implicitWidth + 10
         implicitHeight: batteryTimeText.implicitHeight + 10
-        color: Appearance.palette.backgroundColor1
+
+        Rectangle {
+            color: Appearance.palette.backgroundColor1
+            border.color: Appearance.palette.darkGray
+            anchors.fill: parent
+        }
 
         anchor {
             item: root
-            rect.y: root.height + 5
+            rect.y: root.height
             rect.x: root.width / 2 - width / 2
+            margins.top: 16
         }
 
         Text {
