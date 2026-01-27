@@ -75,12 +75,18 @@ Item {
         visible: false
         implicitWidth: networkName.implicitWidth + 10
         implicitHeight: networkName.implicitHeight + 10
-        color: Appearance.palette.backgroundColor1
 
         anchor {
             item: root
-            rect.y: root.height + 5
+            rect.y: root.height
             rect.x: root.width / 2 - width / 2
+            margins.top: 13
+        }
+
+        Rectangle {
+            color: Appearance.palette.backgroundColor1
+            border.color: Appearance.palette.softGreen
+            anchors.fill: parent
         }
 
         Text {
