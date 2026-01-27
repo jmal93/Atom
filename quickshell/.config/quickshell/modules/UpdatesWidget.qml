@@ -34,29 +34,24 @@ Item {
         Text {
             id: iconText
             color: Appearance.palette.orange
-            font.pixelSize: 13
-            text: {
-                if (Number(Updates.numberOfUpdates) == 0) {
-                    return "";
-                }
-                return "󰚰";
-            }
+            font.pixelSize: Updates.isThereUpdates ? 15 : 13
+            text: Updates.isThereUpdates ? "󰚰" : ""
+            Layout.alignment: Qt.AlignVCenter
         }
 
         Rectangle {
-            visible: Updates.isThereUpdates ? true : false
+            visible: Updates.isThereUpdates
+            color: "transparent"
+            Layout.alignment: Qt.AlignVCenter
+            implicitWidth: numberText.implicitWidth
+            implicitHeight: numberText.implicitHeight
 
             Text {
                 id: numberText
-                text: {
-                    if (Number(Updates.numberOfUpdates) == 0) {
-                        return "";
-                    }
-
-                    return Updates.numberOfUpdates;
-                }
+                text: Updates.numberOfUpdates
                 color: Appearance.palette.foregroundColor
                 font.family: Appearance.font.family.main
+                anchors.centerIn: parent
             }
         }
     }
