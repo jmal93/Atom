@@ -49,6 +49,9 @@ Item {
                     onExited: {
                         background.color = "transparent";
                     }
+                    onClicked: {
+                        Hyprland.workspaces.values[background.index].activate()
+                    }
                 }
             }
         }
