@@ -3,6 +3,7 @@ import QtQuick
 import QtQuick.Layouts
 import qs.services
 import qs.modules
+import qs.widgets
 
 Scope {
     Variants {
@@ -13,8 +14,8 @@ Scope {
             property var modelData
             screen: modelData
             aboveWindows: false
-            color: Appearance.palette.backgroundColor
-            implicitHeight: 40
+            color: "transparent"
+            implicitHeight: 35
 
             property var windowObject: this
 
@@ -22,6 +23,24 @@ Scope {
                 top: true
                 left: true
                 right: true
+            }
+
+            margins {
+                top: 5
+                left: 5
+                right: 5
+            }
+
+            Rectangle {
+                id: barBackground
+                color: Appearance.palette.backgroundColor
+                border.color: Appearance.palette.grey0
+                anchors.fill: parent
+            }
+
+            SystemShutdownWidget {
+                id: shutdownWidget
+                screen: bar.screen
             }
 
             Item {
@@ -33,6 +52,7 @@ Scope {
                 anchors {
                     left: parent.left
                     verticalCenter: parent.verticalCenter
+                    leftMargin: 10
                 }
 
                 Rectangle {
@@ -53,6 +73,14 @@ Scope {
                         verticalCenter: parent.verticalCenter
                     }
 
+                    SystemShutdown {
+                        shutdownWindow: shutdownWidget
+                    }
+
+                    Rectangle {
+                        implicitWidth: 4
+                    }
+
                     Workspaces {}
                 }
             }
@@ -66,6 +94,7 @@ Scope {
                 anchors {
                     right: parent.right
                     verticalCenter: parent.verticalCenter
+                    rightMargin: 10
                 }
 
                 Rectangle {
