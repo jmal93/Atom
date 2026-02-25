@@ -9,7 +9,7 @@ PanelWindow {
     color: "transparent"
     implicitWidth: background.implicitWidth
     visible: true
-    margins.left: opened ? 10 : -implicitWidth
+    margins.left: opened ? 5 : -implicitWidth
 
     anchors {
         top: true
@@ -32,7 +32,7 @@ PanelWindow {
         implicitWidth: iconsColumn.implicitWidth + 20
         implicitHeight: iconsColumn.implicitHeight + 20
         anchors.verticalCenter: parent.verticalCenter
-        color: Appearance.palette.backgroundColor
+        color: Appearance.palette.backgroundColor1
         border.color: Appearance.palette.grey0
 
         ColumnLayout {
