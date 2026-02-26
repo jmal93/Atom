@@ -34,10 +34,21 @@ Singleton {
 
     Process {
         id: wifiStrength
-        running: true
-        command: ["sh", "-c", "nmcli -g IN-USE,BARS dev wifi list | awk -F\":\" '/\*/{print $2}'"]
+        running: false
+        command: ["nmcli", "-t", "--colors", "no", "-f", "IN-USE,BARS", "dev", "wifi", "list"]
         stdout: StdioCollector {
-            onStreamFinished: network.strength = text.trim()
+            onStreamFinished: {
+                const lines = text.trim().split("\n");
+                let bars = "";
+                for (let i = 0; i < lines.length; i++) {
+                    const parts = lines[i].split(":");
+                    if (parts.length >= 2 && (parts[0] === "*" || parts[0] === "yes")) {
+                        bars = parts.slice(1).join(":").trim();
+                        break;
+                    }
+                }
+                network.strength = bars;
+            }
         }
     }
 
