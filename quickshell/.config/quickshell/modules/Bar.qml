@@ -1,4 +1,5 @@
 import Quickshell
+import Quickshell.Hyprland
 import QtQuick
 import QtQuick.Layouts
 import qs.services
@@ -70,16 +71,9 @@ Scope {
 
                 Item {
                     id: center
-
-                    implicitWidth: centerBackground.implicitWidth
-                    implicitHeight: centerBackground.implicitHeight
                     anchors.centerIn: parent
 
-                    Rectangle {
-                        id: centerBackground
-                        implicitWidth: 10
-                        implicitHeight: 10
-                    }
+                    CurrentWindow {}
                 }
 
                 Item {
