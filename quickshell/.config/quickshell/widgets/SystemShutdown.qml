@@ -25,7 +25,7 @@ Item {
             id: text
             text: "󰣇"
             font.pixelSize: 20
-            color: Appearance.palette.blue
+            color: Appearance.palette.color13
             anchors.centerIn: parent
         }
     }
@@ -34,12 +34,6 @@ Item {
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
-        onEntered: {
-            background.color = Appearance.palette.comment;
-        }
-        onExited: {
-            background.color = "transparent";
-        }
         onClicked: {
             if (!root.shutdownWindow) {
                 console.log("Shutdown window não passado");

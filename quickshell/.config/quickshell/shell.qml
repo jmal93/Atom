@@ -1,8 +1,8 @@
 import Quickshell
 import QtQuick
-import "modules" as Modules
+import qs.modules
 
 Scope {
-    Modules.Bar {}
+    Bar {}
     property string assetsPath: Qt.resolvedUrl("./assets/")
 }

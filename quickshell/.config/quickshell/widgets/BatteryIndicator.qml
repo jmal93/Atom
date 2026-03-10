@@ -3,10 +3,19 @@ import QtQuick.Layouts
 import qs.services
 import Quickshell
 
-Item {
+Widget {
     id: root
-    implicitWidth: background.implicitWidth
-    implicitHeight: background.implicitHeight
+
+    icon: {
+        if (Battery.isCharging || Battery.fullyCharged) {
+            return "";
+        } else if (!Battery.isPresent) {
+            return "";
+        }
+        return root.batteryIconLevel(Battery.percentage * 100);
+    }
+    text: Math.floor(Battery.percentage * 100) + qsTr("%")
+    onClicked: batteryTimePopup.visible = !batteryTimePopup.visible
 
     function batteryIconLevel(): string {
         let level = Battery.percentage * 100;
@@ -40,46 +49,19 @@ Item {
         return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
     }
 
-    Rectangle {
-        id: background
-        implicitWidth: text.implicitWidth + 8
-        implicitHeight: text.implicitHeight
-        color: "transparent"
-        radius: 1
-
-        anchors {
-            fill: parent
-        }
-
-        Behavior on color {
-            ColorAnimation {
-                duration: 200
-            }
-        }
-    }
-
     RowLayout {
         id: text
         anchors.centerIn: parent
 
         Text {
             id: iconText
-            text: {
-                if (Battery.isCharging || Battery.fullyCharged) {
-                    return "";
-                } else if (!Battery.isPresent) {
-                    return "";
-                }
-                return root.batteryIconLevel(Battery.percentage * 100);
-            }
-            color: Appearance.palette.darkGray
+            color: Appearance.palette.color1
         }
 
         Text {
             id: percentageText
-            text: Math.floor(Battery.percentage * 100) + qsTr("%")
             font.family: Appearance.font.family.main
-            color: Appearance.palette.foregroundColor
+            color: Appearance.palette.color15
         }
     }
 
@@ -90,8 +72,8 @@ Item {
         implicitHeight: batteryTimeText.implicitHeight + 10
 
         Rectangle {
-            color: Appearance.palette.backgroundColor1
-            border.color: Appearance.palette.darkGray
+            color: Appearance.palette.backgroundColor
+            border.color: Appearance.palette.color8
             anchors.fill: parent
         }
 
@@ -123,19 +105,6 @@ Item {
                 horizontalCenter: parent.horizontalCenter
                 verticalCenter: parent.verticalCenter
             }
-        }
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        hoverEnabled: true
-        onEntered: {
-            background.color = Appearance.palette.comment;
-            batteryTimePopup.visible = true;
-        }
-        onExited: {
-            background.color = "transparent";
-            batteryTimePopup.visible = false;
         }
     }
 }

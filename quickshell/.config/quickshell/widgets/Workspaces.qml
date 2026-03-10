@@ -33,7 +33,7 @@ Item {
                     id: text
                     text: Hyprland.workspaces.values[background.index].name
                     font.pixelSize: 14
-                    color: Hyprland.workspaces.values[background.index].active ? Appearance.palette.softYellow : Appearance.palette.foregroundColor
+                    color: Hyprland.workspaces.values[background.index].active ? Appearance.palette.color10 : Appearance.palette.foregroundColor
                     font.family: Appearance.font.family.main
 
                     anchors {
@@ -43,12 +43,6 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
-                    onEntered: {
-                        background.color = Appearance.palette.comment;
-                    }
-                    onExited: {
-                        background.color = "transparent";
-                    }
                     onClicked: {
                         Hyprland.workspaces.values[background.index].activate()
                     }

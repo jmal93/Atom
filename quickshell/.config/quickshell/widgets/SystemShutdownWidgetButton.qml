@@ -1,6 +1,7 @@
 import QtQuick
 import Qt5Compat.GraphicalEffects
 import Quickshell.Io
+import qs.services
 
 Item {
     id: root
@@ -9,7 +10,7 @@ Item {
     implicitHeight: background.implicitHeight
 
     property url iconSource: ""
-    property color iconColor: "white"
+    property color iconColor: Appearance.palette.color11
     property real iconSize: 32
     property var command: []
     property bool pressed: false

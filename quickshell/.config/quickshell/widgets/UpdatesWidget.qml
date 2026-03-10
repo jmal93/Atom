@@ -4,57 +4,12 @@ import QtQuick.Controls
 import qs.services
 import Quickshell
 
-Item {
+Widget {
     id: root
-    implicitWidth: background.implicitWidth
-    implicitHeight: background.implicitHeight
 
-    Rectangle {
-        id: background
-        implicitWidth: textWidget.implicitWidth + 8
-        implicitHeight: textWidget.implicitHeight
-        color: "transparent"
-        radius: 1
-
-        anchors {
-            fill: parent
-        }
-
-        Behavior on color {
-            ColorAnimation {
-                duration: 200
-            }
-        }
-    }
-
-    RowLayout {
-        id: textWidget
-        anchors.centerIn: parent
-
-        Text {
-            id: iconText
-            color: Appearance.palette.orange
-            font.pixelSize: Updates.isThereUpdates ? 15 : 13
-            text: Updates.isThereUpdates ? "󰚰" : ""
-            Layout.alignment: Qt.AlignVCenter
-        }
-
-        Rectangle {
-            visible: Updates.isThereUpdates
-            color: "transparent"
-            Layout.alignment: Qt.AlignVCenter
-            implicitWidth: numberText.implicitWidth
-            implicitHeight: numberText.implicitHeight
-
-            Text {
-                id: numberText
-                text: Updates.numberOfUpdates
-                color: Appearance.palette.foregroundColor
-                font.family: Appearance.font.family.main
-                anchors.centerIn: parent
-            }
-        }
-    }
+    icon: Updates.isThereUpdates ? "󰚰" : ""
+    text: Updates.numberOfUpdates
+    onClicked: listOfUpdates.visible = !listOfUpdates.visible
 
     PopupWindow {
         id: listOfUpdates
@@ -71,8 +26,8 @@ Item {
 
         Rectangle {
             id: popUpBackground
-            color: Appearance.palette.backgroundColor1
-            border.color: Appearance.palette.orange
+            color: Appearance.palette.backgroundColor
+            border.color: Appearance.palette.color8
             anchors.fill: parent
         }
 
@@ -85,8 +40,8 @@ Item {
 
             Rectangle {
                 id: listScrollBackground
-                color: Appearance.palette.backgroundDark
-                border.color: Appearance.palette.mediumGray
+                color: Appearance.palette.color6
+                border.color: Appearance.palette.color14
                 implicitWidth: listScroll.implicitWidth + 5
                 implicitHeight: listScroll.implicitHeight + 10
 
@@ -157,20 +112,6 @@ Item {
                     }
                 }
             }
-        }
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        hoverEnabled: true
-        onClicked: {
-            listOfUpdates.visible = !listOfUpdates.visible;
-        }
-        onEntered: {
-            background.color = Appearance.palette.comment;
-        }
-        onExited: {
-            background.color = "transparent";
         }
     }
 }

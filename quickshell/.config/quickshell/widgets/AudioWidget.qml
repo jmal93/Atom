@@ -4,12 +4,15 @@ import QtQuick.Layouts
 import qs.services
 import Quickshell
 
-Item {
+Widget {
     id: root
-    implicitWidth: background.implicitWidth
-    implicitHeight: background.implicitHeight
+
     readonly property real volume: Audio.volume
     property var overlayInstance: null
+
+    icon: Audio.isMuted ? "" : root.audioVolumeIconLevel(root.volume)
+    text: root.volume + "%"
+    onClicked: sliderPopup.visible = !sliderPopup.visible
 
     function audioVolumeIconLevel(level: real): string {
         if (level > 50) {
@@ -21,24 +24,6 @@ Item {
         }
     }
 
-    Rectangle {
-        id: background
-        implicitWidth: textContainer.implicitWidth + 8
-        implicitHeight: textContainer.implicitHeight
-        color: "transparent"
-        radius: 1
-
-        anchors {
-            fill: parent
-        }
-
-        Behavior on color {
-            ColorAnimation {
-                duration: 200
-            }
-        }
-    }
-
     PopupWindow {
         id: sliderPopup
         implicitWidth: sliderRow.width + 10
@@ -46,8 +31,8 @@ Item {
 
         Rectangle {
             anchors.fill: parent
-            color: Appearance.palette.backgroundColor1
-            border.color: Appearance.palette.magenta
+            color: Appearance.palette.backgroundColor
+            border.color: Appearance.palette.color8
         }
 
         anchor {
@@ -100,38 +85,6 @@ Item {
                 font.family: Appearance.font.family.main
                 text: qsTr("100")
             }
-        }
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        hoverEnabled: true
-        onClicked: {
-            sliderPopup.visible = !sliderPopup.visible;
-        }
-        onEntered: {
-            background.color = Appearance.palette.comment;
-        }
-        onExited: {
-            background.color = "transparent";
-        }
-    }
-
-    RowLayout {
-        id: textContainer
-        anchors.centerIn: background
-
-        Text {
-            id: iconText
-            color: Appearance.palette.magenta
-            text: Audio.isMuted ? "" : root.audioVolumeIconLevel(root.volume)
-        }
-
-        Text {
-            id: volumeText
-            color: Appearance.palette.foregroundColor
-            font.family: Appearance.font.family.main
-            text: root.volume + "%"
         }
     }
 }

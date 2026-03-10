@@ -32,8 +32,8 @@ PanelWindow {
         implicitWidth: iconsColumn.implicitWidth + 20
         implicitHeight: iconsColumn.implicitHeight + 20
         anchors.verticalCenter: parent.verticalCenter
-        color: Appearance.palette.backgroundColor1
-        border.color: Appearance.palette.grey0
+        color: Appearance.palette.backgroundColor
+        border.color: Appearance.palette.color8
 
         ColumnLayout {
             id: iconsColumn
@@ -42,21 +42,18 @@ PanelWindow {
 
             SystemShutdownWidgetButton {
                 iconSource: assetsPath + "power.svg"
-                iconColor: Appearance.palette.red
                 command: ["sh", "-c", "systemctl poweroff"]
                 Layout.alignment: Qt.AlignHCenter
             }
 
             SystemShutdownWidgetButton {
                 iconSource: assetsPath + "pause.svg"
-                iconColor: Appearance.palette.softYellow
                 command: ["sh", "-c", "systemctl suspend & hyprlock -q"]
                 Layout.alignment: Qt.AlignHCenter
             }
 
             SystemShutdownWidgetButton {
                 iconSource: assetsPath + "reboot.svg"
-                iconColor: Appearance.palette.softGreen
                 command: ["systemctl", "reboot"]
                 Layout.alignment: Qt.AlignHCenter
             }

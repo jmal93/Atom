@@ -55,7 +55,7 @@ Item {
         visible: false
         implicitWidth: calendarText.implicitWidth + 10
         implicitHeight: calendarText.implicitHeight
-        color: Appearance.palette.backgroundColor1
+        color: Appearance.palette.backgroundColor
 
         anchor {
             item: root

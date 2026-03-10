@@ -17,7 +17,7 @@ Singleton {
     }
 
     Timer {
-        interval: 1000 * 60 * 10
+        interval: 1000 * 60
         repeat: true
         running: true
         onTriggered: getUpdates.running = true

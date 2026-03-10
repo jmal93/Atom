@@ -1,10 +1,8 @@
 import Quickshell
-import Quickshell.Hyprland
 import QtQuick
 import QtQuick.Layouts
-import qs.services
-import qs.modules
 import qs.widgets
+import qs.services
 
 Scope {
     Variants {
@@ -34,8 +32,8 @@ Scope {
 
             Rectangle {
                 id: barBackground
-                color: Appearance.palette.backgroundColor1
-                border.color: Appearance.palette.grey0
+                color: Appearance.palette.backgroundColor
+                border.color: Appearance.palette.color8
                 anchors.fill: parent
 
                 Item {
@@ -89,6 +87,8 @@ Scope {
 
                     RowLayout {
                         id: rightRow
+
+                        spacing: 10
 
                         UpdatesWidget {}
 
