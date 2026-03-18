@@ -1,7 +1,8 @@
 import QtQuick
 import Quickshell
+import Quickshell.Hyprland
 import qs.services as Services
-import qs.modules
+import qs.widgets.network as NetworkComponents
 
 Widget {
     id: root
@@ -15,6 +16,8 @@ Widget {
     }
 
     onClicked: networkPopup.visible = !networkPopup.visible
+    onEntered: networkNamePopup.visible = true
+    onExited: networkNamePopup.visible = false
 
     function barToWifi(bar: string): string {
         switch (bar) {
@@ -31,11 +34,34 @@ Widget {
         }
     }
 
-    NetworkPopup {
+    HyprlandFocusGrab {
+        id: focusGrab
+        active: false
+        windows: [networkPopup]
+        onCleared: networkPopup.visible = false
+    }
+
+    Timer {
+        id: focusGrabTimer
+        interval: 50
+        repeat: false
+        onTriggered: focusGrab.active = true
+    }
+
+    NetworkComponents.NetworkPopup {
         id: networkPopup
         anchor {
             item: root
             rect.y: root.height
+        }
+        onVisibleChanged: {
+            if (visible) {
+                focusGrab.active = false;
+                focusGrabTimer.restart();
+            } else {
+                focusGrabTimer.stop();
+                focusGrab.active = false;
+            }
         }
     }
 

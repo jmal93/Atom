@@ -10,6 +10,7 @@ Scope {
 
         delegate: PanelWindow {
             id: bar
+
             property var modelData
             screen: modelData
             aboveWindows: false
@@ -50,13 +51,10 @@ Scope {
                     RowLayout {
                         id: leftRow
 
-                        SystemShutdown {
-                            shutdownWindow: shutdownWidget
-                        }
-
                         SystemShutdownWidget {
                             id: shutdownWidget
-                            screen: bar.screen
+                            bar: bar
+                            screen: screen
                         }
 
                         Rectangle {

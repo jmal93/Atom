@@ -11,6 +11,8 @@ Item {
     property color textColor: Appearance.palette.foregroundColor
 
     signal clicked
+    signal entered
+    signal exited
 
     implicitWidth: background.implicitWidth
     implicitHeight: background.implicitHeight
@@ -30,22 +32,15 @@ Item {
                 text: root.icon
                 font.pixelSize: 14
                 color: root.iconColor
-                Layout.alignment: Qt.AlignLeft
+                Layout.alignment: Qt.AlignLeft | Qt.AlignHCenter
             }
 
             Text {
-                text: {
-                    if (root.text === "") {
-                        visible = false;
-                        return "";
-                    } else {
-                        visible = true;
-                        return root.text;
-                    }
-                }
+                text: root.text
+                visible: root.text !== ""
                 color: root.textColor
                 font.family: Appearance.font.family.main
-                Layout.alignment: Qt.AlignRight
+                Layout.alignment: Qt.AlignRight | Qt.AlignHCenter
             }
         }
     }
@@ -56,5 +51,7 @@ Item {
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
         onClicked: root.clicked()
+        onEntered: root.entered()
+        onExited: root.exited()
     }
 }

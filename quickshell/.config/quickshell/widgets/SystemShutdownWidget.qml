@@ -1,62 +1,51 @@
 import QtQuick
-import QtQuick.Layouts
-import Quickshell
 import qs.services
+import qs.widgets.system_shutdown
 
-PanelWindow {
+Item {
     id: root
-
-    color: "transparent"
     implicitWidth: background.implicitWidth
-    visible: true
-    margins.left: opened ? 5 : -implicitWidth
+    implicitHeight: background.implicitHeight
 
-    anchors {
-        top: true
-        left: true
-        bottom: true
-    }
-
-    Behavior on margins.left {
-        NumberAnimation {
-            duration: 100
-            easing: Easing.InCubic
-        }
-    }
-
-    property bool opened: false
+    required property var bar
+    required property var screen
 
     Rectangle {
         id: background
+        implicitWidth: text.implicitWidth + 8
+        implicitHeight: text.implicitHeight
+        color: "transparent"
+        anchors.fill: parent
 
-        implicitWidth: iconsColumn.implicitWidth + 20
-        implicitHeight: iconsColumn.implicitHeight + 20
-        anchors.verticalCenter: parent.verticalCenter
-        color: Appearance.palette.backgroundColor
-        border.color: Appearance.palette.color8
-
-        ColumnLayout {
-            id: iconsColumn
-            anchors.centerIn: background
-            spacing: 50
-
-            SystemShutdownWidgetButton {
-                iconSource: assetsPath + "power.svg"
-                command: ["sh", "-c", "systemctl poweroff"]
-                Layout.alignment: Qt.AlignHCenter
-            }
-
-            SystemShutdownWidgetButton {
-                iconSource: assetsPath + "pause.svg"
-                command: ["sh", "-c", "systemctl suspend & hyprlock -q"]
-                Layout.alignment: Qt.AlignHCenter
-            }
-
-            SystemShutdownWidgetButton {
-                iconSource: assetsPath + "reboot.svg"
-                command: ["systemctl", "reboot"]
-                Layout.alignment: Qt.AlignHCenter
+        Behavior on color {
+            ColorAnimation {
+                duration: 200
             }
         }
+
+        Text {
+            id: text
+            text: "󰣇"
+            font.pixelSize: 20
+            color: Appearance.palette.color13
+            anchors.centerIn: parent
+        }
+    }
+
+    SystemShutdownDashboard {
+        id: systemShutdownDashboard
+
+        anchor {
+            window: bar
+            rect.x: (bar.width - width) / 2
+            rect.y: (screen.height - height) / 2
+        }
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        hoverEnabled: true
+        cursorShape: Qt.PointingHandCursor
+        onClicked: systemShutdownDashboard.visible = !systemShutdownDashboard.visible
     }
 }

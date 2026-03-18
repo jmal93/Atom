@@ -1,7 +1,8 @@
 import QtQuick
 import QtQuick.Layouts
-import qs.services
 import Quickshell
+import qs.services
+import qs.widgets.battery
 
 Widget {
     id: root
@@ -15,7 +16,8 @@ Widget {
         return root.batteryIconLevel(Battery.percentage * 100);
     }
     text: Math.floor(Battery.percentage * 100) + qsTr("%")
-    onClicked: batteryTimePopup.visible = !batteryTimePopup.visible
+    onEntered: batteryTimePopup.visible = true
+    onExited: batteryTimePopup.visible = false
 
     function batteryIconLevel(): string {
         let level = Battery.percentage * 100;
@@ -42,13 +44,6 @@ Widget {
         }
     }
 
-    function secondsToHourMinutes(seconds: real): string {
-        const hours = Math.floor(seconds / 3600);
-        const minutes = Math.floor((seconds % 3600) / 60);
-
-        return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
-    }
-
     RowLayout {
         id: text
         anchors.centerIn: parent
@@ -65,46 +60,14 @@ Widget {
         }
     }
 
-    PopupWindow {
+    BatteryTimePopup {
         id: batteryTimePopup
-        visible: false
-        implicitWidth: batteryTimeText.implicitWidth + 10
-        implicitHeight: batteryTimeText.implicitHeight + 10
-
-        Rectangle {
-            color: Appearance.palette.backgroundColor
-            border.color: Appearance.palette.color8
-            anchors.fill: parent
-        }
 
         anchor {
             item: root
             rect.y: root.height
             rect.x: root.width / 2 - width / 2
             margins.top: 16
-        }
-
-        Text {
-            id: batteryTimeText
-            color: Appearance.palette.foregroundColor
-            font.family: Appearance.font.family.main
-            text: {
-                if (Battery.fullyCharged) {
-                    return "Carga cheia";
-                }
-                if (Battery.isDischarging) {
-                    const text = "Tempo restante: " + root.secondsToHourMinutes(Battery.timeToEmpty);
-                    return text;
-                } else if (Battery.isCharging) {
-                    const text = "Tempo para carga: " + root.secondsToHourMinutes(Battery.timeToFull);
-                    return text;
-                }
-            }
-
-            anchors {
-                horizontalCenter: parent.horizontalCenter
-                verticalCenter: parent.verticalCenter
-            }
         }
     }
 }

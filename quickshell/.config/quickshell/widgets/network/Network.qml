@@ -15,6 +15,18 @@ Rectangle {
     implicitHeight: content.implicitHeight
     color: "red"
 
+    onExpandedChanged: {
+        if (expanded && hasSecurity) {
+            Qt.callLater(function () {
+                if (expandedArea.visible && passwordField.visible) {
+                    passwordField.forceActiveFocus();
+                }
+            });
+        } else if (hasSecurity) {
+            passwordField.text = "";
+        }
+    }
+
     function barToWifi(bar: string): string {
         switch (bar) {
         case "▂▄▆█":
@@ -52,7 +64,7 @@ Rectangle {
         Rectangle {
             implicitWidth: headerRow.implicitWidth
             implicitHeight: headerRow.implicitHeight
-            color: "blue"
+            color: Appearance.palette.color3
             Layout.fillWidth: true
 
             RowLayout {
@@ -85,16 +97,32 @@ Rectangle {
             }
         }
 
-        Item {
+        FocusScope {
             id: expandedArea
 
             Layout.fillWidth: true
             visible: root.expanded
-            Layout.preferredHeight: root.expanded ? connectButton.implicitHeight : 0
+            Layout.preferredHeight: root.expanded ? inputColumn.implicitHeight : 0
 
-            Button {
-                id: connectButton
-                text: "conectar"
+            ColumnLayout {
+                id: inputColumn
+
+                anchors.centerIn: parent
+
+                TextField {
+                    id: passwordField
+                    visible: root.hasSecurity
+                    placeholderText: "senha"
+                    placeholderTextColor: "black"
+                    Layout.alignment: Qt.AlignHCenter
+                }
+
+                Button {
+                    id: connectButton
+                    text: "conectar"
+                    Layout.alignment: Qt.AlignHCenter
+                    onClicked: console.log(passwordField.text)
+                }
             }
         }
     }
