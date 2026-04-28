@@ -2,18 +2,22 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import qs.services
+import "network_functions.js" as Functions
 
 Rectangle {
     id: root
 
     required property string name
+    required property string bssid
     required property string bars
     required property bool hasSecurity
     property bool expanded: false
 
+    signal toggled
+
     implicitWidth: content.implicitWidth
-    implicitHeight: content.implicitHeight
-    color: "red"
+    implicitHeight: content.implicitHeight + 5
+    color: Appearance.palette.color3
 
     onExpandedChanged: {
         if (expanded && hasSecurity) {
@@ -24,36 +28,6 @@ Rectangle {
             });
         } else if (hasSecurity) {
             passwordField.text = "";
-        }
-    }
-
-    function barToWifi(bar: string): string {
-        switch (bar) {
-        case "▂▄▆█":
-            return "󰤨";
-        case "▂▄▆_":
-            return "󰤥";
-        case "▂▄__":
-            return "󰤢";
-        case "▂___":
-            return "󰤟";
-        default:
-            return "󰤫";
-        }
-    }
-
-    function barToWifiSecurity(bar: string): string {
-        switch (bar) {
-        case "▂▄▆█":
-            return "󰤪";
-        case "▂▄▆_":
-            return "󰤧";
-        case "▂▄__":
-            return "󰤤";
-        case "▂___":
-            return "󰤡";
-        default:
-            return "󱛏";
         }
     }
 
@@ -82,7 +56,7 @@ Rectangle {
 
                 Text {
                     id: networkStrength
-                    text: root.hasSecurity ? root.barToWifiSecurity(root.bars) : root.barToWifi(root.bars)
+                    text: root.hasSecurity ? Functions.barToWifiSecurity(root.bars) : Functions.barToWifi(root.bars)
                     color: Appearance.palette.foregroundColor
                     font.family: Appearance.font.family.main
                     Layout.alignment: Qt.AlignRight
@@ -93,7 +67,7 @@ Rectangle {
                 anchors.fill: parent
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
-                onClicked: root.expanded = !root.expanded
+                onClicked: root.toggled()
             }
         }
 
@@ -121,7 +95,7 @@ Rectangle {
                     id: connectButton
                     text: "conectar"
                     Layout.alignment: Qt.AlignHCenter
-                    onClicked: console.log(passwordField.text)
+                    onClicked: NetworkService.connectToNetwork(root.name, root.bssid, passwordField.text)
                 }
             }
         }

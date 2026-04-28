@@ -30,7 +30,7 @@ Widget {
             item: root
             rect.x: root.width / 2 - width / 2
             rect.y: root.height
-            margins.top: 16
+            margins.top: 4
         }
     }
 }

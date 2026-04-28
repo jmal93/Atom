@@ -3,6 +3,7 @@ pragma Singleton
 import Quickshell
 import Quickshell.Io
 import QtQuick
+import "network_service_functions.js" as Functions
 
 Singleton {
     id: root
@@ -10,69 +11,22 @@ Singleton {
     property string strength: ""
     property string name: ""
     property ListModel networksModel: ListModel {}
+    property list<string> knownNetworks
 
-    function update(): void {
+    function update() {
         wifiStatus.running = true;
         wifiStrength.running = true;
         wifiName.running = true;
         networkList.running = true;
     }
 
-    function keyOf(obj) {
-        return obj.ssid + "|" + obj.bssid;
-    }
-
-    function applyDiff(newList) {
-        const incoming = new Map();
-        for (const n of newList) {
-            if (n.ssid && n.bssid) {
-                incoming.set(keyOf(n), n);
-            }
+    function connectToNetwork(name, bssid, password = "") {
+        if (root.knownNetworks.includes(name)) {
+            connectProcess.command = ["nmcli", "connection", "up", name];
+            connectProcess.running = true;
+            return;
         }
 
-        for (let i = networksModel.count - 1; i >= 0; i--) {
-            if (!incoming.has(networksModel.get(i).key)) {
-                networksModel.remove(i);
-            }
-        }
-
-        const existingKeys = new Set();
-        for (let i = 0; i < networksModel.count; i++) {
-            const item = networksModel.get(i);
-            const updated = incoming.get(item.key);
-            existingKeys.add(item.key);
-
-            if (item.signal !== updated.signal) {
-                networksModel.setProperty(i, "signal", updated.signal);
-            }
-            if (item.bars !== updated.bars) {
-                networksModel.setProperty(i, "bars", updated.bars);
-            }
-        }
-
-        for (const [key, n] of incoming) {
-            if (!existingKeys.has(key)) {
-                networksModel.append({
-                    key,
-                    ssid: n.ssid,
-                    bssid: n.bssid,
-                    signal: n.signal,
-                    bars: n.bars,
-                    security: n.security
-                });
-            }
-        }
-
-        for (let i = 1; i < networksModel.count; i++) {
-            let j = i;
-            while (j > 0 && networksModel.get(j).signal > networksModel.get(j - 1).signal) {
-                networksModel.move(j, j - 1, 1);
-                j--;
-            }
-        }
-    }
-
-    function connectToNetwork(bssid, password = "") {
         if (password === "") {
             connectProcess.command = ["nmcli", "device", "wifi", "connect", bssid];
         } else {
@@ -121,7 +75,7 @@ Singleton {
     Process {
         id: wifiName
         running: false
-        command: ["sh", "-c", "nmcli -g IN-USE,SSID d w l | awk -F: '$1 == \"*\" {print $2}'"]
+        command: ["sh", "-c", "nmcli -t -f NAME,TYPE connection show --active | awk -F: '$2 ~ /wireless/ {print $1}'"]
         stdout: StdioCollector {
             onStreamFinished: root.name = text.trim()
         }
@@ -132,49 +86,32 @@ Singleton {
         running: false
         command: ["sh", "-c", "nmcli -t  -g 'SSID,SIGNAL,BARS,SECURITY,BSSID' device wifi list"]
         stdout: StdioCollector {
-            onStreamFinished: {
-                const lines = text.split('\n');
-                const listOfNetworks = [];
-
-                for (let i = 0; i < lines.length; i++) {
-                    const line = lines[i].trim();
-                    if (!line) {
-                        continue;
-                    }
-
-                    const parts = line.split(":");
-
-                    const ssid = parts[0];
-                    const signal = Number(parts[1]);
-                    const bars = parts[2];
-                    const security = parts[3];
-
-                    if (!ssid || Number.isNaN(signal) || !bars || !security)
-                        continue;
-
-                    const bssidEscaped = parts.slice(4).join(":");
-                    const bssid = bssidEscaped.replace(/\\:/g, ":");
-
-                    if (!bssid) {
-                        continue;
-                    }
-
-                    listOfNetworks.push({
-                        ssid,
-                        signal,
-                        bars,
-                        security,
-                        bssid
-                    });
-                }
-
-                root.applyDiff(listOfNetworks);
-            }
+            onStreamFinished: Functions.buildListOfNetworks(text)
         }
     }
 
     Process {
         id: connectProcess
+        running: false
+        stdout: StdioCollector {
+            onStreamFinished: {
+                notification.command = ["notify-send", text];
+                notification.running = true;
+            }
+        }
+    }
+
+    Process {
+        id: getListOfKnowWifiNetworks
+        running: true
+        command: ["sh", "-c", "nmcli -t -f NAME,TYPE connection | awk -F: '$2 ~ /wireless/ {print $1}'"]
+        stdout: StdioCollector {
+            onStreamFinished: root.knownNetworks = text.split('\n')
+        }
+    }
+
+    Process {
+        id: notification
         running: false
     }
 }

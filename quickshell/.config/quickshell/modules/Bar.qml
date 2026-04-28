@@ -1,8 +1,8 @@
 import Quickshell
 import QtQuick
-import QtQuick.Layouts
 import qs.widgets
 import qs.services
+import qs.modules
 
 Scope {
     Variants {
@@ -33,37 +33,13 @@ Scope {
 
             Rectangle {
                 id: barBackground
+
                 color: Appearance.palette.backgroundColor
                 border.color: Appearance.palette.color8
                 anchors.fill: parent
 
-                Item {
-                    id: leftSide
 
-                    implicitWidth: leftRow.implicitWidth
-                    implicitHeight: leftRow.implicitHeight
-                    anchors {
-                        left: parent.left
-                        leftMargin: 4
-                        verticalCenter: parent.verticalCenter
-                    }
-
-                    RowLayout {
-                        id: leftRow
-
-                        SystemShutdownWidget {
-                            id: shutdownWidget
-                            bar: bar
-                            screen: screen
-                        }
-
-                        Rectangle {
-                            implicitWidth: 4
-                        }
-
-                        Workspaces {}
-                    }
-                }
+                BarLeftSide {}
 
                 Item {
                     id: center
@@ -72,33 +48,7 @@ Scope {
                     CurrentWindow {}
                 }
 
-                Item {
-                    id: rightSide
-
-                    implicitWidth: rightRow.implicitWidth
-                    implicitHeight: rightRow.implicitHeight
-                    anchors {
-                        right: parent.right
-                        rightMargin: 4
-                        verticalCenter: parent.verticalCenter
-                    }
-
-                    RowLayout {
-                        id: rightRow
-
-                        spacing: 10
-
-                        UpdatesWidget {}
-
-                        AudioWidget {}
-
-                        BatteryIndicator {}
-
-                        NetworkWidget {}
-
-                        ClockWidget {}
-                    }
-                }
+                BarRightSide {}
             }
         }
     }

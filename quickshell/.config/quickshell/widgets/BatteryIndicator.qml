@@ -67,7 +67,7 @@ Widget {
             item: root
             rect.y: root.height
             rect.x: root.width / 2 - width / 2
-            margins.top: 16
+            margins.top: 4
         }
     }
 }

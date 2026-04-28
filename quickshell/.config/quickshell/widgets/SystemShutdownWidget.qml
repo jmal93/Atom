@@ -7,9 +7,6 @@ Item {
     implicitWidth: background.implicitWidth
     implicitHeight: background.implicitHeight
 
-    required property var bar
-    required property var screen
-
     Rectangle {
         id: background
         implicitWidth: text.implicitWidth + 8
@@ -36,9 +33,10 @@ Item {
         id: systemShutdownDashboard
 
         anchor {
-            window: bar
-            rect.x: (bar.width - width) / 2
-            rect.y: (screen.height - height) / 2
+            item: root
+            rect.x: root.width / 2 - width / 2
+            rect.y: root.height
+            margins.top: 10
         }
     }
 
@@ -46,6 +44,7 @@ Item {
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
+        enabled: true
         onClicked: systemShutdownDashboard.visible = !systemShutdownDashboard.visible
     }
 }

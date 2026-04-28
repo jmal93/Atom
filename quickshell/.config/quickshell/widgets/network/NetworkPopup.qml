@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import qs.services
+import "network_functions.js" as Functions
 
 PopupWindow {
     id: root
@@ -13,7 +14,7 @@ PopupWindow {
         id: popUpBackground
 
         color: Appearance.palette.backgroundColor
-        border.color: Appearance.palette.color7
+        border.color: Appearance.palette.color8
         anchors.fill: parent
     }
 

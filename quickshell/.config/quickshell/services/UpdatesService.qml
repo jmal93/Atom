@@ -40,7 +40,7 @@ Singleton {
     Process {
         id: doUpdateInTerminal
         running: false
-        command: ["kitty", "--hold", "sh", "-lc", "sudo pacman -Syu; exit"]
+        command: ["kitty", "--hold", "sh", "-lc", "sudo pacman -Syu --noconfirm; exit"]
 
         onRunningChanged: {
             if (!running && !getUpdates.running) {

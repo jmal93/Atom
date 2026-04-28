@@ -15,6 +15,7 @@ ScrollView {
         id: listOfNetworks
 
         property real maxWidth: 0
+        property var expandedNetwork: null
 
         anchors.centerIn: parent
 
@@ -26,7 +27,17 @@ ScrollView {
 
                 name: modelData.ssid
                 bars: modelData.bars
+                bssid: modelData.bssid
                 hasSecurity: modelData.security !== "--"
+
+                expanded: listOfNetworks.expandedNetwork === this
+                onToggled: {
+                    if (listOfNetworks.expandedNetwork === this) {
+                        listOfNetworks.expandedNetwork = null;
+                    } else {
+                        listOfNetworks.expandedNetwork = this;
+                    }
+                }
 
                 Layout.preferredWidth: listOfNetworks.maxWidth
 

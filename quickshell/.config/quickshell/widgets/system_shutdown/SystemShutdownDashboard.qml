@@ -15,15 +15,25 @@ PopupWindow {
         id: dimOverlay
     }
 
+    function showWidget() {
+        console.log('apareceu');
+        dimOverlay.show();
+        background.opacity = 0;
+        background.scale = 0.85;
+        appearAnimation.restart();
+        scaleAnimation.restart();
+    }
+
+    function hideWidget() {
+        console.log('desapareceu');
+        dimOverlay.hide();
+    }
+
     onVisibleChanged: {
         if (visible) {
-            dimOverlay.show();
-            background.opacity = 0;
-            background.scale = 0.85;
-            appearAnimation.restart();
-            scaleAnimation.restart();
+            root.showWidget();
         } else {
-            dimOverlay.hide();
+            root.hideWidget();
         }
     }
 
@@ -83,17 +93,17 @@ PopupWindow {
                 Layout.bottomMargin: 10
                 spacing: 50
 
-                SystemShutdownWidgetButton {
+                SystemShutdownButton {
                     iconSource: assetsPath + "power.svg"
                     command: ["sh", "-c", "systemctl poweroff"]
                     Layout.alignment: Qt.AlignHCenter
                 }
-                SystemShutdownWidgetButton {
+                SystemShutdownButton {
                     iconSource: assetsPath + "pause.svg"
                     command: ["sh", "-c", "systemctl suspend & hyprlock -q"]
                     Layout.alignment: Qt.AlignHCenter
                 }
-                SystemShutdownWidgetButton {
+                SystemShutdownButton {
                     iconSource: assetsPath + "reboot.svg"
                     command: ["systemctl", "reboot"]
                     Layout.alignment: Qt.AlignHCenter
