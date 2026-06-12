@@ -44,7 +44,7 @@ Item {
                     anchors.fill: parent
                     hoverEnabled: true
                     onClicked: {
-                        Hyprland.workspaces.values[background.index].activate()
+                        Hyprland.workspaces.values[background.index].activate();
                     }
                 }
             }

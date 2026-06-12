@@ -16,7 +16,6 @@ PopupWindow {
     }
 
     function showWidget() {
-        console.log('apareceu');
         dimOverlay.show();
         background.opacity = 0;
         background.scale = 0.85;
@@ -25,7 +24,6 @@ PopupWindow {
     }
 
     function hideWidget() {
-        console.log('desapareceu');
         dimOverlay.hide();
     }
 
@@ -86,7 +84,6 @@ PopupWindow {
                 }
             }
 
-            // Linha dos ícones
             RowLayout {
                 id: iconsRow
                 Layout.alignment: Qt.AlignHCenter

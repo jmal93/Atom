@@ -40,7 +40,7 @@ Singleton {
     Process {
         id: doUpdateInTerminal
         running: false
-        command: ["kitty", "--hold", "sh", "-lc", "sudo pacman -Syu --noconfirm; exit"]
+        command: ["kitty", "sh", "-lc", "sudo pacman -Syu --noconfirm; status=$?; if [ $status -eq 0 ]; then notify-send 'Atualização do sistema' 'Atualização concluída com sucesso'; else notify-send 'Atualização do sistema' 'A atualização terminou com erro'; fi; exit $status"]
 
         onRunningChanged: {
             if (!running && !getUpdates.running) {

@@ -1,7 +1,7 @@
-import Quickshell
 import QtQuick
 import QtQuick.Layouts
 import qs.services
+import qs.widgets.time
 
 Item {
     id: root
@@ -50,28 +50,13 @@ Item {
         }
     }
 
-    PopupWindow {
+    CalendarPopup {
         id: calendarPopup
         visible: false
-        implicitWidth: calendarText.implicitWidth + 10
-        implicitHeight: calendarText.implicitHeight
-        color: Appearance.palette.backgroundColor
 
         anchor {
             item: root
             rect.y: root.height + 5
-        }
-
-        Text {
-            id: calendarText
-            text: Time.calendar
-            color: Appearance.palette.foregroundColor
-            font.family: Appearance.font.family.main
-
-            anchors {
-                horizontalCenter: parent.horizontalCenter
-                verticalCenter: parent.verticalCenter
-            }
         }
     }
 
