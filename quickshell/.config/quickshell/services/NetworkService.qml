@@ -8,15 +8,15 @@ import "network_service_functions.js" as Functions
 Singleton {
     id: root
     property bool isTurnedOn: false
-    property string strength: ""
     property string name: ""
+    property string strength: ""
+    property string bssid: ""
     property ListModel networksModel: ListModel {}
     property list<string> knownNetworks
 
     function update() {
         wifiStatus.running = true;
-        wifiStrength.running = true;
-        wifiName.running = true;
+        wifiConnectedProperties.running = true;
         networkList.running = true;
     }
 
@@ -53,31 +53,33 @@ Singleton {
     }
 
     Process {
-        id: wifiStrength
+        id: wifiConnectedProperties
         running: false
-        command: ["nmcli", "-t", "--colors", "no", "-f", "IN-USE,BARS", "dev", "wifi", "list"]
+        command: ["nmcli", "-t", "--colors", "no", "-f", "IN-USE,SSID,BARS,BSSID", "dev", "wifi", "list"]
         stdout: StdioCollector {
             onStreamFinished: {
                 const lines = text.trim().split("\n");
+                let name = "";
                 let bars = "";
+                let bssid = "";
+
                 for (let i = 0; i < lines.length; i++) {
                     const parts = lines[i].split(":");
                     if (parts.length >= 2 && (parts[0] === "*" || parts[0] === "yes")) {
-                        bars = parts.slice(1).join(":").trim();
+                        name = parts[1];
+                        bars = parts[2];
+
+                        const bssidEscaped = parts.slice(3).join(":");
+                        bssid = bssidEscaped.replace(/\\:/g, ":");
+
                         break;
                     }
                 }
-                root.strength = bars;
-            }
-        }
-    }
 
-    Process {
-        id: wifiName
-        running: false
-        command: ["sh", "-c", "nmcli -t -f NAME,TYPE connection show --active | awk -F: '$2 ~ /wireless/ {print $1}'"]
-        stdout: StdioCollector {
-            onStreamFinished: root.name = text.trim()
+                root.name = name;
+                root.strength = bars;
+                root.bssid = bssid;
+            }
         }
     }
 

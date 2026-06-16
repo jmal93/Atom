@@ -60,6 +60,9 @@ function buildMapOfIncomingNetworks(newList) {
     const incoming = new Map();
 
     for (const n of newList) {
+        if (n.bssid === bssid) {
+            continue;
+        }
         if (n.ssid && n.bssid) {
             incoming.set(keyOf(n), n);
         }

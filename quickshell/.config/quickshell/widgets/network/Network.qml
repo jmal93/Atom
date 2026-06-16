@@ -12,6 +12,7 @@ Rectangle {
     required property string bars
     required property bool hasSecurity
     property bool expanded: false
+    property bool isConnected: false
 
     signal toggled
 

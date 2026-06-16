@@ -30,14 +30,25 @@ PopupWindow {
 
             anchors.centerIn: parent
 
-            Text {
-                id: connectedNetworkText
-                text: NetworkService.name
-                color: Appearance.palette.foregroundColor
-                font.family: Appearance.font.family.main
-                font.pixelSize: 14
+            RowLayout {
 
                 Layout.alignment: Qt.AlignCenter
+
+                Text {
+                    id: connectedNetworkText
+                    text: NetworkService.name
+                    color: Appearance.palette.foregroundColor
+                    font.family: Appearance.font.family.main
+                    font.pixelSize: 14
+                }
+
+                Text {
+                    id: connectedNetworkStrength
+                    text: Functions.barToWifi(NetworkService.strength)
+                    color: Appearance.palette.foregroundColor
+                    font.family: Appearance.font.family.main
+                    font.pixelSize: 14
+                }
             }
 
             Rectangle {
