@@ -3,9 +3,22 @@ import Quickshell
 import qs.services as Services
 
 PopupWindow {
+    id: root
     visible: false
     implicitWidth: networkName.implicitWidth + 10
     implicitHeight: networkName.implicitHeight + 10
+
+    function popUpText() {
+        if (!Services.NetworkService.isTurnedOn) {
+            return "Wifi desligado";
+        }
+
+        if (Services.NetworkService.name === "") {
+            return "Desconectado";
+        }
+
+        return Services.NetworkService.name;
+    }
 
     Rectangle {
         color: Services.Appearance.palette.backgroundColor
@@ -15,7 +28,7 @@ PopupWindow {
 
     Text {
         id: networkName
-        text: qsTr(Services.NetworkService.name)
+        text: root.popUpText()
         color: Services.Appearance.palette.foregroundColor
         font.family: Services.Appearance.font.family.main
 
