@@ -16,9 +16,11 @@ Rectangle {
 
     signal toggled
 
-    implicitWidth: content.implicitWidth
-    implicitHeight: content.implicitHeight + 5
+    implicitWidth: content.implicitWidth + border.width * 2
+    implicitHeight: content.implicitHeight + border.width * 2
+
     color: Appearance.palette.color3
+    border.color: Appearance.palette.color11
 
     onExpandedChanged: {
         if (expanded && hasSecurity) {
@@ -34,12 +36,14 @@ Rectangle {
 
     ColumnLayout {
         id: content
+        spacing: 0
         anchors.fill: parent
+        anchors.margins: root.border.width
 
         Rectangle {
             implicitWidth: headerRow.implicitWidth
             implicitHeight: headerRow.implicitHeight
-            color: Appearance.palette.color3
+            color: root.color
             Layout.fillWidth: true
 
             RowLayout {
@@ -75,28 +79,45 @@ Rectangle {
         FocusScope {
             id: expandedArea
 
-            Layout.fillWidth: true
             visible: root.expanded
+
+            Layout.fillWidth: true
             Layout.preferredHeight: root.expanded ? inputColumn.implicitHeight : 0
 
-            ColumnLayout {
-                id: inputColumn
+            Rectangle {
+                id: expandedAreaBackground
+                color: root.color
+                anchors.fill: parent
+                anchors.margins: root.border.width
 
-                anchors.centerIn: parent
+                ColumnLayout {
+                    id: inputColumn
 
-                TextField {
-                    id: passwordField
-                    visible: root.hasSecurity
-                    placeholderText: "senha"
-                    placeholderTextColor: "black"
-                    Layout.alignment: Qt.AlignHCenter
-                }
+                    anchors.fill: parent
 
-                Button {
-                    id: connectButton
-                    text: "conectar"
-                    Layout.alignment: Qt.AlignHCenter
-                    onClicked: NetworkService.connectToNetwork(root.name, root.bssid, passwordField.text)
+                    TextField {
+                        id: passwordField
+                        visible: root.hasSecurity
+                        placeholderText: "senha"
+                        placeholderTextColor: "black"
+                        font.family: Appearance.font.family.main
+                        echoMode: TextInput.Password
+                        passwordCharacter: "*"
+
+                        Layout.alignment: Qt.AlignHCenter
+                        Layout.topMargin: 5
+                    }
+
+                    Button {
+                        id: connectButton
+                        text: "conectar"
+                        font.family: Appearance.font.family.main
+
+                        Layout.alignment: Qt.AlignHCenter
+                        Layout.bottomMargin: 5
+
+                        onClicked: NetworkService.connectToNetwork(root.name, root.bssid, passwordField.text)
+                    }
                 }
             }
         }
