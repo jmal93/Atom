@@ -1,0 +1,15 @@
+hl.window_rule({
+	name = "firefox",
+	match = {
+		class = "^(firefox)",
+	},
+	workspace = 2,
+})
+
+hl.window_rule({
+	name = "obsidian",
+	match = {
+		class = "^(obsidian)",
+	},
+	workspace = 3,
+})
