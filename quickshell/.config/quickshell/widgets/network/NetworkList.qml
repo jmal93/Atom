@@ -20,15 +20,12 @@ ScrollView {
         anchors.centerIn: parent
 
         Repeater {
-            model: NetworkService.networksModel
+            model: NetworkService.networks
 
             Network {
                 required property var modelData
 
-                name: modelData.ssid
-                bars: modelData.bars
-                bssid: modelData.bssid
-                hasSecurity: modelData.security !== "--"
+                network: modelData
 
                 expanded: listOfNetworks.expandedNetwork === this
                 onToggled: {

@@ -3,13 +3,15 @@ import Quickshell
 import Quickshell.Hyprland
 import qs.services as Services
 import qs.widgets.network as NetworkComponents
+import "network/network_functions.js" as Functions
 
 Widget {
     id: root
 
     icon: {
         if (Services.NetworkService.isTurnedOn) {
-            return root.barToWifi(Services.NetworkService.strength);
+            const signalStrength = Services.NetworkService.connectedNetwork ? Services.NetworkService.connectedNetwork.signalStrength : 0;
+            return Functions.barToWifi(signalStrength);
         } else {
             return "󰤭";
         }
@@ -18,21 +20,6 @@ Widget {
     onClicked: networkPopup.visible = !networkPopup.visible
     onEntered: networkNamePopup.visible = true
     onExited: networkNamePopup.visible = false
-
-    function barToWifi(bar: string): string {
-        switch (bar) {
-        case "▂▄▆█":
-            return "󰤨";
-        case "▂▄▆_":
-            return "󰤥";
-        case "▂▄__":
-            return "󰤢";
-        case "▂___":
-            return "󰤟";
-        default:
-            return "󰤫";
-        }
-    }
 
     HyprlandFocusGrab {
         id: focusGrab
@@ -58,9 +45,11 @@ Widget {
         }
         onVisibleChanged: {
             if (visible) {
+                Services.NetworkService.enableWifiScan();
                 focusGrab.active = false;
                 focusGrabTimer.restart();
             } else {
+                Services.NetworkService.disableWifiScan();
                 focusGrabTimer.stop();
                 focusGrab.active = false;
             }

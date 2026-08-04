@@ -1,119 +1,63 @@
 pragma Singleton
 
 import Quickshell
-import Quickshell.Io
+import Quickshell.Networking
 import QtQuick
-import "network_service_functions.js" as Functions
+
+// import "network_service_functions.js" as Functions
 
 Singleton {
     id: root
-    property bool isTurnedOn: false
-    property string name: ""
-    property string strength: ""
-    property string bssid: ""
-    property ListModel networksModel: ListModel {}
-    property list<string> knownNetworks
+    readonly property bool isTurnedOn: Networking.wifiEnabled
+    readonly property WifiDevice wifiDevice: {
+        const devices = Networking.devices.values;
 
-    function update() {
-        wifiStatus.running = true;
-        wifiConnectedProperties.running = true;
-        networkList.running = true;
+        for (let i = 0; i < devices.length; i++) {
+            if (devices[i].type == DeviceType.Wifi) {
+                return devices[i];
+            }
+        }
+
+        return null;
     }
 
-    function connectToNetwork(name, bssid, password = "") {
-        if (root.knownNetworks.includes(name)) {
-            connectProcess.command = ["nmcli", "connection", "up", name];
-            connectProcess.running = true;
-            return;
+    readonly property list<Network> networks: getNetworksSorted()
+    readonly property Network connectedNetwork: {
+        if (!root.wifiDevice)
+            return null;
+
+        const networks = root.wifiDevice.networks.values;
+
+        for (let i = 0; i < networks.length; i++) {
+            if (networks[i].connected)
+                return networks[i];
         }
 
-        if (password === "") {
-            connectProcess.command = ["nmcli", "device", "wifi", "connect", bssid];
-        } else {
-            connectProcess.command = ["nmcli", "device", "wifi", "connect", bssid, "password", password];
-        }
+        return null;
+    }
 
-        connectProcess.running = true;
+    function enableWifiScan() {
+        wifiDevice.scannerEnabled = true;
+    }
+
+    function disableWifiScan() {
+        wifiDevice.scannerEnabled = false;
+    }
+
+    function getNetworksSorted() {
+        if (!root.wifiDevice)
+            return [];
+
+        return [...root.wifiDevice.networks.values].sort((a, b) => b.signalStrength - a.signalStrength);
     }
 
     Timer {
+        id: timer
         interval: 1000
-        running: true
+        running: root.wifiDevice.scannerEnabled
         repeat: true
-        onTriggered: root.update()
-    }
-
-    Process {
-        id: wifiStatus
-        running: true
-        command: ["nmcli", "radio", "wifi"]
-        stdout: StdioCollector {
-            onStreamFinished: root.isTurnedOn = text.trim() == "enabled"
+        onTriggered: {
+            root.networks = root.getNetworksSorted();
         }
-    }
-
-    Process {
-        id: wifiConnectedProperties
-        running: false
-        command: ["nmcli", "-t", "--colors", "no", "-f", "IN-USE,SSID,BARS,BSSID", "dev", "wifi", "list"]
-        stdout: StdioCollector {
-            onStreamFinished: {
-                const lines = text.trim().split("\n");
-                let name = "";
-                let bars = "";
-                let bssid = "";
-
-                for (let i = 0; i < lines.length; i++) {
-                    const parts = lines[i].split(":");
-                    if (parts.length >= 2 && (parts[0] === "*" || parts[0] === "yes")) {
-                        name = parts[1];
-                        bars = parts[2];
-
-                        const bssidEscaped = parts.slice(3).join(":");
-                        bssid = bssidEscaped.replace(/\\:/g, ":");
-
-                        break;
-                    }
-                }
-
-                root.name = name;
-                root.strength = bars;
-                root.bssid = bssid;
-            }
-        }
-    }
-
-    Process {
-        id: networkList
-        running: false
-        command: ["sh", "-c", "nmcli -t  -g 'SSID,SIGNAL,BARS,SECURITY,BSSID' device wifi list"]
-        stdout: StdioCollector {
-            onStreamFinished: Functions.buildListOfNetworks(text)
-        }
-    }
-
-    Process {
-        id: connectProcess
-        running: false
-        stdout: StdioCollector {
-            onStreamFinished: {
-                notification.command = ["notify-send", text];
-                notification.running = true;
-            }
-        }
-    }
-
-    Process {
-        id: getListOfKnowWifiNetworks
-        running: true
-        command: ["sh", "-c", "nmcli -t -f NAME,TYPE connection | awk -F: '$2 ~ /wireless/ {print $1}'"]
-        stdout: StdioCollector {
-            onStreamFinished: root.knownNetworks = text.split('\n')
-        }
-    }
-
-    Process {
-        id: notification
-        running: false
     }
 }

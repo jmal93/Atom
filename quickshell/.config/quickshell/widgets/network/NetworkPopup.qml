@@ -31,12 +31,13 @@ PopupWindow {
             anchors.centerIn: parent
 
             RowLayout {
+                id: connectedNetworkRow
 
                 Layout.alignment: Qt.AlignCenter
 
                 Text {
                     id: connectedNetworkText
-                    text: NetworkService.name
+                    text: NetworkService.connectedNetwork ? NetworkService.connectedNetwork.name : "Desconectado"
                     color: Appearance.palette.foregroundColor
                     font.family: Appearance.font.family.main
                     font.pixelSize: 14
@@ -44,7 +45,10 @@ PopupWindow {
 
                 Text {
                     id: connectedNetworkStrength
-                    text: Functions.barToWifi(NetworkService.strength)
+                    text: {
+                        const signalStrength = NetworkService.connectedNetwork ? NetworkService.connectedNetwork.signalStrength : 0;
+                        Functions.barToWifi(signalStrength);
+                    }
                     color: Appearance.palette.foregroundColor
                     font.family: Appearance.font.family.main
                     font.pixelSize: 14
@@ -52,7 +56,7 @@ PopupWindow {
             }
 
             Rectangle {
-                implicitWidth: networkList.implicitWidth + 10
+                implicitWidth: Math.max(networkList.implicitWidth + 10, connectedNetworkRow.implicitWidth)
                 implicitHeight: networkList.implicitHeight + 10
                 color: "transparent"
 

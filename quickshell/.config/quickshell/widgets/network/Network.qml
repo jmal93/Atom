@@ -1,16 +1,20 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
+import Quickshell.Networking
 import qs.services
 import "network_functions.js" as Functions
 
 Rectangle {
     id: root
 
-    required property string name
-    required property string bssid
-    required property string bars
-    required property bool hasSecurity
+    required property WifiNetwork network
+    property string name: network ? network.name : ""
+    property real signalStrength: network ? network.signalStrength : 0
+    property bool hasSecurity: network ? network.security !== WifiSecurityType.Open : false
+    property bool isKnown: network ? network.known : false
+    property bool needPassword: root.hasSecurity && !root.isKnown
+
     property bool expanded: false
     property bool isConnected: false
 
@@ -61,7 +65,7 @@ Rectangle {
 
                 Text {
                     id: networkStrength
-                    text: root.hasSecurity ? Functions.barToWifiSecurity(root.bars) : Functions.barToWifi(root.bars)
+                    text: hasSecurity ? Functions.barToWifiSecurity(root.signalStrength) : Functions.barToWifi(root.signalStrength)
                     color: Appearance.palette.foregroundColor
                     font.family: Appearance.font.family.main
                     Layout.alignment: Qt.AlignRight
@@ -97,7 +101,7 @@ Rectangle {
 
                     TextField {
                         id: passwordField
-                        visible: root.hasSecurity
+                        visible: root.needPassword
                         placeholderText: "senha"
                         placeholderTextColor: "black"
                         font.family: Appearance.font.family.main
@@ -108,15 +112,48 @@ Rectangle {
                         Layout.topMargin: 5
                     }
 
-                    Button {
-                        id: connectButton
-                        text: "conectar"
-                        font.family: Appearance.font.family.main
+                    Item {
+                        id: connectControl
+
+                        readonly property bool connecting: root.network && root.network.state === ConnectionState.Connecting
+
+                        implicitWidth: 90
+                        implicitHeight: Math.max(connectButton.implicitHeight)
 
                         Layout.alignment: Qt.AlignHCenter
                         Layout.bottomMargin: 5
 
-                        onClicked: NetworkService.connectToNetwork(root.name, root.bssid, passwordField.text)
+                        Button {
+                            id: connectButton
+
+                            anchors.centerIn: parent
+                            visible: !connectControl.connecting
+
+                            text: "conectar"
+                            font.family: Appearance.font.family.main
+
+                            onClicked: {
+                                if (!root.network)
+                                    return;
+
+                                if (root.needPassword)
+                                    root.network.connectWithPsk(passwordField.text);
+                                else
+                                    root.network.connect();
+                            }
+                        }
+
+                        BusyIndicator {
+                            id: connectingIndicator
+
+                            anchors.centerIn: parent
+
+                            running: connectControl.connecting
+                            visible: running
+
+                            implicitWidth: 26
+                            implicitHeight: 26
+                        }
                     }
                 }
             }

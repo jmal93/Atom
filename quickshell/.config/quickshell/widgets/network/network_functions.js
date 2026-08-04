@@ -1,30 +1,26 @@
-function barToWifi(bar) {
-        switch (bar) {
-        case "▂▄▆█":
-            return "󰤨";
-        case "▂▄▆_":
-            return "󰤥";
-        case "▂▄__":
-            return "󰤢";
-        case "▂___":
-            return "󰤟";
-        default:
-            return "󰤫";
-        }
-    }
+function barToWifi(strength) {
+    if (strength > 0.8)
+        return "󰤨";
+    else if (strength <= 0.8 && strength > 0.6)
+        return "󰤥";
+    else if (strength <= 0.6 && strength > 0.4)
+        return "󰤢";
+    else if (strength <= 0.4 && strength > 0.2)
+        return "󰤟";
+    else
+        return "󰤫";
+}
 
-function barToWifiSecurity(bar) {
-        switch (bar) {
-        case "▂▄▆█":
-            return "󰤪";
-        case "▂▄▆_":
-            return "󰤧";
-        case "▂▄__":
-            return "󰤤";
-        case "▂___":
-            return "󰤡";
-        default:
-            return "󱛏";
-        }
-    }
+function barToWifiSecurity(strength) {
+    if (strength > 0.8)
+        return "󰤪";
+    else if (strength <= 0.8 && strength > 0.6)
+        return "󰤧";
+    else if (strength <= 0.6 && strength > 0.4)
+        return "󰤤";
+    else if (strength <= 0.4 && strength > 0.2)
+        return "󰤡";
+    else
+        return "󱛏";
+}
 

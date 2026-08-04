@@ -13,11 +13,11 @@ PopupWindow {
             return "Wifi desligado";
         }
 
-        if (Services.NetworkService.name === "") {
+        if (!Services.NetworkService.connectedNetwork) {
             return "Desconectado";
         }
 
-        return Services.NetworkService.name;
+        return Services.NetworkService.connectedNetwork.name;
     }
 
     Rectangle {
