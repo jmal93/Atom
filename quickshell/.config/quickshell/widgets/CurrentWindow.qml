@@ -4,7 +4,6 @@ import qs.services
 
 Item {
     id: root
-    anchors.centerIn: parent
 
     Text {
         text: {

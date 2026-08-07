@@ -9,6 +9,8 @@ Item {
     implicitWidth: workspacesContainer.implicitWidth
     implicitHeight: workspacesContainer.implicitHeight
 
+    anchors.centerIn: parent
+
     RowLayout {
         id: workspacesContainer
 

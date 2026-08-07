@@ -12,7 +12,13 @@ set -x PATH "$HOME/.tmuxifier/bin:$PATH"
 set -x PATH "$HOME/.local/bin:$PATH"
 set -x PATH "$HOME:/home/jao/.dotnet/tools:$PATH"
 set -x PATH "/usr/lib/qt6/bin:$PATH"
+set -x PATH "/usr/lib/python3.13:$PATH"
 set -x PATH "$HOME/Documents/flutter/flutter/bin:$PATH"
+
+# pyenv
+set -Ux PYENV_ROOT $HOME/.pyenv
+fish_add_path $PYENV_ROOT/bin
+pyenv init - | source
 
 alias sus="systemctl suspend & hyprlock -q"
 alias pwroff="systemctl poweroff"

@@ -7,6 +7,7 @@ Item {
 
     implicitWidth: leftRow.implicitWidth
     implicitHeight: leftRow.implicitHeight
+
     anchors {
         left: parent.left
         leftMargin: 4
@@ -23,7 +24,5 @@ Item {
         Rectangle {
             implicitWidth: 4
         }
-
-        Workspaces {}
     }
 }

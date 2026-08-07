@@ -99,38 +99,40 @@ Rectangle {
 
                     anchors.fill: parent
 
-                    TextField {
-                        id: passwordField
-                        visible: root.needPassword
-                        placeholderText: "senha"
-                        placeholderTextColor: "black"
-                        font.family: Appearance.font.family.main
-                        echoMode: TextInput.Password
-                        passwordCharacter: "*"
+                    readonly property bool connecting: root.network && root.network.state === ConnectionState.Connecting
+
+                    ColumnLayout {
+                        id: connectionForm
+
+                        visible: !inputColumn.connecting
+                        spacing: 5
 
                         Layout.alignment: Qt.AlignHCenter
                         Layout.topMargin: 5
-                    }
-
-                    Item {
-                        id: connectControl
-
-                        readonly property bool connecting: root.network && root.network.state === ConnectionState.Connecting
-
-                        implicitWidth: 90
-                        implicitHeight: Math.max(connectButton.implicitHeight)
-
-                        Layout.alignment: Qt.AlignHCenter
                         Layout.bottomMargin: 5
+
+                        TextField {
+                            id: passwordField
+
+                            visible: root.needPassword
+
+                            placeholderText: "senha"
+                            placeholderTextColor: "black"
+                            font.family: Appearance.font.family.main
+
+                            echoMode: TextInput.Password
+                            passwordCharacter: "*"
+
+                            Layout.alignment: Qt.AlignHCenter
+                        }
 
                         Button {
                             id: connectButton
 
-                            anchors.centerIn: parent
-                            visible: !connectControl.connecting
-
                             text: "conectar"
                             font.family: Appearance.font.family.main
+
+                            Layout.alignment: Qt.AlignHCenter
 
                             onClicked: {
                                 if (!root.network)
@@ -142,18 +144,18 @@ Rectangle {
                                     root.network.connect();
                             }
                         }
+                    }
 
-                        BusyIndicator {
-                            id: connectingIndicator
+                    BusyIndicator {
+                        id: connectingIndicator
 
-                            anchors.centerIn: parent
+                        Layout.alignment: Qt.AlignHCenter
 
-                            running: connectControl.connecting
-                            visible: running
+                        running: inputColumn.connecting
+                        visible: running
 
-                            implicitWidth: 26
-                            implicitHeight: 26
-                        }
+                        implicitWidth: 26
+                        implicitHeight: 26
                     }
                 }
             }

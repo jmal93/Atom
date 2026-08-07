@@ -26,6 +26,8 @@ Item {
 
         NetworkWidget {}
 
+        // OptionsWidget {}
+
         ClockWidget {}
     }
 }

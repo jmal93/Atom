@@ -55,7 +55,7 @@ Singleton {
         id: timer
         interval: 1000
         running: root.wifiDevice.scannerEnabled
-        repeat: true
+        repeat: false
         onTriggered: {
             root.networks = root.getNetworksSorted();
         }

@@ -38,14 +38,13 @@ Scope {
                 border.color: Appearance.palette.color8
                 anchors.fill: parent
 
-
                 BarLeftSide {}
 
                 Item {
                     id: center
                     anchors.centerIn: parent
 
-                    CurrentWindow {}
+                    Workspaces {}
                 }
 
                 BarRightSide {}
